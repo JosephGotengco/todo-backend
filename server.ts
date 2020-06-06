@@ -12,7 +12,8 @@ import helmet from "helmet";
 require("./utils/auth/config_passport")(passport);
 
 const app = express();
-const port = 5000 || process.env.PORT;
+const port = process.env.PORT || 5000;
+const hostname = process.env.YOUR_HOST || "0.0.0.0";
 
 // middleware
 app.use(
@@ -22,7 +23,6 @@ app.use(
 );
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cookieParser());
 const allowedOrigins = ["http://localhost:3000", "http://localhost:5000"];
 app.set("trust proxy", 1);
 app.use(
@@ -58,11 +58,13 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(cookieParser());
 const limiter = rateLimit({
     windowMs: app.get("env") === "production" ? 15 * 60 * 1000 : 1,
     max: app.get("env") === "production" ? 1000 : 999999, 
 });
 app.use(limiter);
+app.set("trust proxy", "loopback");
 
 // routes
 app.use("/users", require("./routes/users"));
