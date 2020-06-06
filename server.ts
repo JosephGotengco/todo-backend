@@ -23,7 +23,7 @@ app.use(
 );
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-const allowedOrigins = ["http://localhost:3000", "http://localhost:5000"];
+const allowedOrigins = ["https://simple-todo-list-frontend.herokuapp.com", "http://localhost:5000"];
 app.set("trust proxy", 1);
 app.use(
     cors({
