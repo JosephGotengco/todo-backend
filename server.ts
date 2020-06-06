@@ -44,7 +44,7 @@ app.use(helmet());
 var expiryDate = new Date(Date.now() + 60 * 60 * 1000) // 1 hour
 app.use(
     session({
-        secret: config.get("expressSession.secret"),
+        secret: process.env.express_session_secret!,
         resave: false,
         saveUninitialized: false,
         cookie: {

@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import config from "config";
 import checkString from "../checks/check_string";
 
-const saltRounds: number = config.get("bcrypt.saltRounds");
+const saltRounds: number = parseInt(process.env.salt_rounds!);
 
 /**
  *  Returns the hashed version of a password
