@@ -48,8 +48,8 @@ app.use(
         resave: false,
         saveUninitialized: false,
         cookie: {
-            httpOnly: app.get("env") === "production",
-            secure: app.get("env") === "production",
+            // httpOnly: app.get("env") === "production",
+            // secure: app.get("env") === "production",
             // path: "/auth",
             expires: expiryDate,
             // domain: "http://localhost:3000/",
@@ -60,7 +60,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 const limiter = rateLimit({
     windowMs: app.get("env") === "production" ? 15 * 60 * 1000 : 1,
-    max: app.get("env") === "production" ? 400 : 999999, 
+    max: app.get("env") === "production" ? 1000 : 999999, 
 });
 app.use(limiter);
 

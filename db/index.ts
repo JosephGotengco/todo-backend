@@ -1,13 +1,12 @@
 import AWS from "aws-sdk";
 
 // config
-const credentials = new AWS.SharedIniFileCredentials({
-    profile: "todo-project-user",
-});
-
 AWS.config.update({
     region: "us-west-2",
-    credentials,
+    credentials: {
+        accessKeyId: process.env.aws_key!,
+        secretAccessKey: process.env.aws_secret!,
+    },
 });
 
 const startDb = () => {
