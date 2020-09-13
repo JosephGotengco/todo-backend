@@ -24,8 +24,27 @@ app.use(
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.set("trust proxy", 1);
+
+const whitelist = [
+    "https://simple-todo-list-frontend.herokuapp.com",
+    "https://simple-todo-list-backend.herokuapp.com",
+    "http://localhost:5000",
+    "http://localhost:3000",
+];
 app.use(
-    cors()
+    cors({
+        origin: (origin, callback) => {
+            if (!origin) return callback(null, true);
+            if (whitelist.indexOf(origin) === -1) {
+                var msg =
+                    "The CORS policy for this site does not " +
+                    "allow access from the specified Origin.";
+                return callback(new Error(msg), false);
+            }
+            return callback(null, true);
+        },
+        credentials: true,
+    })
 );
 app.use(helmet());
 var expiryDate = new Date(Date.now() + 60 * 60 * 1000) // 1 hour
