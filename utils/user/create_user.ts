@@ -27,6 +27,7 @@ const createUser = async (
         console.log(userData);
         // user already exists
         if (userData.status) {
+            console.log("USER ALREADY EXISTS");
             return returnRes(
                 false,
                 null,
@@ -34,6 +35,7 @@ const createUser = async (
                 400
             );
         } else {
+            console.log("USER DOESNT EXISTS YET");
             const params = {
                 Item: {
                     email: {
