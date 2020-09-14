@@ -24,6 +24,7 @@ const createUser = async (
 
         // check for existing user with email
         const userData = await getUser(email);
+        console.log(userData);
         // user already exists
         if (userData.status)
             return returnRes(
