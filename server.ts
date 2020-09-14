@@ -53,6 +53,7 @@ app.use(
         secret: process.env.express_session_secret!,
         resave: false,
         saveUninitialized: false,
+        proxy: true,
         cookie: {
             sameSite: "none",
             httpOnly: app.get("env") === "production",
