@@ -57,7 +57,11 @@ router.post("/", async (req, res, next) => {
             // create and return new user
             const data = await User.createUser(email, hashedPassword);
             if (!data.status) {
-                return data;
+                return res
+                    .status(200)
+                    .json(
+                        data
+                    );
             } else {
                 passport.authenticate("local", (err, user) => {
                     if (err) {
