@@ -26,64 +26,65 @@ const createUser = async (
         const userData = await getUser(email);
         console.log(userData);
         // user already exists
-        if (userData.status)
+        if (userData.status) {
             return returnRes(
                 false,
                 null,
                 "user with that email already exists",
                 400
             );
-
-        const params = {
-            Item: {
-                email: {
-                    S: email,
-                },
-                password: {
-                    S: password,
-                },
-                todos: {
-                    L: [
-                        {
-                            M: {
-                                id: { N: "0" },
-                                message: { S: "Make my first todo!!!" },
-                                done: { BOOL: false },
-                            },
-                        },
-                    ],
-                },
-                nextTodoKey: {
-                    N: "1"
-                }
-            },
-            ReturnConsumedCapacity: "TOTAL",
-            TableName: "Users",
-        };
-
-        // create new user
-        const data = await dynamodb.putItem(params).promise();
-        // check for success
-        if (
-            data.ConsumedCapacity?.TableName === "Users" &&
-            data.ConsumedCapacity.CapacityUnits === 1
-        ) {
-            delete params.Item.password;
-            // return new user
-            return returnRes(
-                true,
-                { user:unmarshall(params.Item) },
-                "user created",
-                200
-            );
         } else {
-            // return unhandled error
-            return returnRes(
-                false,
-                null,
-                "there was an error creating your account",
-                500
-            );
+            const params = {
+                Item: {
+                    email: {
+                        S: email,
+                    },
+                    password: {
+                        S: password,
+                    },
+                    todos: {
+                        L: [
+                            {
+                                M: {
+                                    id: { N: "0" },
+                                    message: { S: "Make my first todo!!!" },
+                                    done: { BOOL: false },
+                                },
+                            },
+                        ],
+                    },
+                    nextTodoKey: {
+                        N: "1",
+                    },
+                },
+                ReturnConsumedCapacity: "TOTAL",
+                TableName: "Users",
+            };
+
+            // create new user
+            const data = await dynamodb.putItem(params).promise();
+            // check for success
+            if (
+                data.ConsumedCapacity?.TableName === "Users" &&
+                data.ConsumedCapacity.CapacityUnits === 1
+            ) {
+                delete params.Item.password;
+                // return new user
+                return returnRes(
+                    true,
+                    { user: unmarshall(params.Item) },
+                    "user created",
+                    200
+                );
+            } else {
+                // return unhandled error
+                return returnRes(
+                    false,
+                    null,
+                    "there was an error creating your account",
+                    500
+                );
+            }
         }
     } catch (err) {
         if (err instanceof UserException) {
