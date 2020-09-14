@@ -56,29 +56,11 @@ router.post("/", async (req, res, next) => {
             const hashedPassword = await hashPassword(password);
             // create and return new user
             const data = await User.createUser(email, hashedPassword);
-        passport.authenticate("local", (err, user) => {
-            if (err) {
-                return res
-                    .status(500)
-                    .json(
-                        returnRes(
-                            false,
-                            null,
-                            "there was an error logging you in",
-                            500
-                        )
-                    );
-            }
-            if (!user) {
-                return res
-                    .status(200)
-                    .json(
-                        returnRes(false, null, "invalid email or password", 401)
-                    );
-            }
-            if (user) {
-                req.login(user, (loginErr) => {
-                    if (loginErr) {
+            if (!data.status) {
+                return data;
+            } else {
+                passport.authenticate("local", (err, user) => {
+                    if (err) {
                         return res
                             .status(500)
                             .json(
@@ -90,12 +72,41 @@ router.post("/", async (req, res, next) => {
                                 )
                             );
                     }
-                    return res
-                        .status(200)
-                        .json(returnRes(true, { user }, "logged in", 200));
-                });
+                    if (!user) {
+                        return res
+                            .status(200)
+                            .json(
+                                returnRes(
+                                    false,
+                                    null,
+                                    "invalid email or password",
+                                    401
+                                )
+                            );
+                    }
+                    if (user) {
+                        req.login(user, (loginErr) => {
+                            if (loginErr) {
+                                return res
+                                    .status(500)
+                                    .json(
+                                        returnRes(
+                                            false,
+                                            null,
+                                            "there was an error logging you in",
+                                            500
+                                        )
+                                    );
+                            }
+                            return res
+                                .status(200)
+                                .json(
+                                    returnRes(true, { user }, "logged in", 200)
+                                );
+                        });
+                    }
+                })(req, res, next);
             }
-        })(req, res, next);
         }
     } catch (err) {
         if (err instanceof UserException) {
