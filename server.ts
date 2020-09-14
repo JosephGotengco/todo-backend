@@ -54,6 +54,7 @@ app.use(
         resave: false,
         saveUninitialized: false,
         cookie: {
+            sameSite: "none",
             // httpOnly: app.get("env") === "production",
             // secure: app.get("env") === "production",
             // path: "/auth",
