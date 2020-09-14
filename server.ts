@@ -56,7 +56,7 @@ app.use(
         cookie: {
             sameSite: "none",
             // httpOnly: app.get("env") === "production",
-            // secure: app.get("env") === "production",
+            secure: app.get("env") === "production",
             // path: "/auth",
             expires: expiryDate,
             // domain: "http://localhost:3000/",
